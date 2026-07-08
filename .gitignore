@@ -1,0 +1,22 @@
+# Gradle / build output (regenerable)
+.gradle/
+build/
+
+# Local machine config (SDK path, etc.)
+local.properties
+
+# Android Studio / IntelliJ IDE files
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Signing keys — never commit
+*.jks
+*.keystore
+keystore.properties

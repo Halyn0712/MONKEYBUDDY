@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Monkey Face</string>
+    <string name="picker_title">选择要管理的应用</string>
+    <string name="accessibility_desc">用于感应你打开了名单里的应用，并在开始前提醒你约定时长、到点后温柔提醒你。Monkey Face 不会读取或上传你的任何内容。</string>
+</resources>
