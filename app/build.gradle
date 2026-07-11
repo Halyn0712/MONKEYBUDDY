@@ -1,0 +1,25 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.monkeybody.brain'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.monkeybody.brain'
+        minSdk 29
+        targetSdk 35
+        versionCode 5
+        versionName '1.0.4'
+    }
+
+    // GGUF 已经是压缩/量化格式，禁止 aapt 再压缩，便于首次启动时顺序复制和校验。
+    androidResources { noCompress += ['gguf'] }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}

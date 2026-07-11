@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:background="@drawable/bg_page">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center_horizontal"
+        android:paddingStart="24dp" android:paddingTop="28dp" android:paddingEnd="24dp" android:paddingBottom="32dp">
+
+        <ImageView android:layout_width="108dp" android:layout_height="150dp"
+            android:src="@drawable/monkey_hanging" android:scaleType="fitCenter"
+            android:contentDescription="@string/app_name" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/permission_title" android:textSize="27sp" android:textStyle="bold"
+            android:textColor="#35231D" android:layout_marginTop="4dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/permission_description" android:textSize="15sp"
+            android:textColor="#6D554C" android:gravity="center" android:lineSpacingExtra="3dp"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_info_card"
+            android:layout_marginTop="22dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/how_it_works" android:textSize="17sp" android:textStyle="bold"
+                android:textColor="#4A3027" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/how_it_works_detail" android:textSize="14sp"
+                android:textColor="#735B52" android:lineSpacingExtra="5dp" android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <Button android:id="@+id/startButton" android:layout_width="match_parent" android:layout_height="56dp"
+            android:text="@string/enable_overlay" android:textSize="17sp" android:textStyle="bold"
+            android:textColor="#FFFFFF" android:backgroundTint="#A85E3D" android:layout_marginTop="22dp" />
+
+        <Button android:id="@+id/stopButton" android:layout_width="match_parent" android:layout_height="50dp"
+            android:text="@string/stop_overlay" android:textColor="#5A3B30"
+            android:backgroundTint="#E9D4C4" android:layout_marginTop="8dp" />
+
+        <Button android:id="@+id/demoButton" android:layout_width="match_parent" android:layout_height="50dp"
+            android:text="@string/vlm_demo" android:textColor="#4A3027"
+            android:backgroundTint="#F3E5D9" android:layout_marginTop="14dp" />
+
+        <Button android:id="@+id/diagnosticsButton" android:layout_width="match_parent" android:layout_height="50dp"
+            android:text="@string/diagnostics" android:textColor="#4A3027"
+            android:backgroundTint="#F3E5D9" android:layout_marginTop="8dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/privacy_summary" android:textSize="12sp" android:textColor="#806B62"
+            android:gravity="center" android:lineSpacingExtra="2dp" android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

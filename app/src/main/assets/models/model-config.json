@@ -1,0 +1,10 @@
+{
+  "backend": "llama.cpp/libmtmd",
+  "family": "SmolVLM-500M-Instruct",
+  "quantization": "INT4",
+  "model": "model-q4.gguf",
+  "mmproj": "mmproj.gguf",
+  "contextSize": 2048,
+  "threads": 4,
+  "maxOutputTokens": 160
+}
