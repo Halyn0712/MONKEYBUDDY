@@ -1,2 +1,2 @@
-# Monkey-Brain
+# MONKEYBUDDY
 An app for social media
