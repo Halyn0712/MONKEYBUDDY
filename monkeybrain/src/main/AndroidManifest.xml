@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+
+    <application>
+        <activity
+            android:name="com.monkeybody.brain.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.monkeybody.brain.vlm.VlmDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.monkeybody.brain.diagnostics.DiagnosticsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.monkeybody.brain.vlm.CloudVlmSettingsActivity"
+            android:exported="false" />
+        <service
+            android:name="com.monkeybody.brain.overlay.MonkeyOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="persistent user-controlled self-discipline overlay" />
+        </service>
+        <service
+            android:name="com.monkeybody.brain.capture.ScreenCaptureService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />
+    </application>
+</manifest>

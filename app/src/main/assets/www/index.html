@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Monkey Face</title>
+<title>MONKEYBUDDY</title>
 <style>
 :root{
   --bg:#fdf6ec; --surface:#ffffff; --surface2:#fbf3e4; --surface3:#f4e7d2;
@@ -135,7 +135,7 @@ body{
     <div class="back" onclick="goHome()">‹</div>
     <div class="brand">🐵</div>
     <div style="flex:1">
-      <div class="title" id="tbTitle">Monkey Face</div>
+      <div class="title" id="tbTitle">MONKEYBUDDY</div>
       <div class="sub" id="tbSub"></div>
     </div>
   </div>
@@ -156,6 +156,10 @@ body{
         <h3>🛡️ 自动监控</h3>
         <div id="monitorBody"></div>
       </div>
+      <div class="card" id="brainCard">
+        <h3>🐵 Monkey Brain 搭子</h3>
+        <div id="brainBody"></div>
+      </div>
       <div class="navgrid">
         <div class="navtile" onclick="showReport()"><div class="ico">📊</div><div class="lb">今日报告</div></div>
         <div class="navtile" onclick="showTrend()"><div class="ico">📈</div><div class="lb">本周趋势</div></div>
@@ -163,7 +167,7 @@ body{
         <div class="navtile" onclick="showReasons()"><div class="ico">💬</div><div class="lb">理由统计</div></div>
       </div>
       <div class="card" style="margin-top:14px;">
-        <h3>💡 Monkey Face 的小提醒</h3>
+        <h3>💡 MONKEYBUDDY 的小提醒</h3>
         <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="homeTip"></div>
       </div>
     </div>
@@ -210,12 +214,7 @@ function nativeSessions(){
   try{return JSON.parse(Android.getSessions()||'[]')||[];}catch(e){return [];}
 }
 function load(){
-  var local=[];
-  try{local=JSON.parse(localStorage.getItem(KEY)||'[]')||[];}catch(e){local=[];}
-  // Merge manual (localStorage) + auto (native) records, dedup by id.
-  var map={};
-  local.concat(nativeSessions()).forEach(function(x){if(x&&x.id!=null)map[x.id]=x;});
-  return Object.keys(map).map(function(k){return map[k];});
+  return nativeSessions();
 }
 function todayStr(d){d=d||new Date();var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0'+m:m)+'-'+(day<10?'0'+day:day);}
 function platClass(p){return {'抖音':'p-douyin','小红书':'p-xhs','微博':'p-weibo','B站':'p-bili','微信':'p-wechat'}[p]||'p-other';}
@@ -236,7 +235,7 @@ function showScreen(id,title,sub,back){
 }
 function goHome(){
   stack=['home']; renderHome();
-  showScreen('home','Monkey Face','今天，你还好吗？',false);
+  showScreen('home','MONKEYBUDDY','Face + Brain · 今天，你还好吗？',false);
 }
 
 /* ---------- home ---------- */
@@ -261,6 +260,7 @@ function renderHome(){
   ];
   document.getElementById('homeTip').textContent=tips[new Date().getDate()%tips.length];
   renderMonitor();
+  renderBrain();
 }
 
 /* ---------- native monitor panel ---------- */
@@ -300,6 +300,36 @@ function renderMonitor(){
   document.getElementById('monitorBody').innerHTML=html;
 }
 window.__onNativeResume=function(){ try{ renderHome(); }catch(e){} };
+
+function renderBrain(){
+  var card=document.getElementById('brainCard');
+  if(!window.Android||!Android.getBrainEnabled){ card.style.display='none'; return; }
+  card.style.display='';
+  var enabled=Android.getBrainEnabled();
+  var identity=Android.getBrainIdentity()||'kaoyan';
+  var options=[];
+  try{options=JSON.parse(Android.getIdentityOptions()||'[]')||[];}catch(e){options=[];}
+  var snap={};
+  try{snap=JSON.parse(Android.getBrainSnapshot()||'{}')||{};}catch(e){snap={};}
+  var html='<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">识别低质无关内容时，悬浮猴子会毒舌提醒；高价值内容保持安静。</div>';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">';
+  html+='<div style="font-size:14px;font-weight:600;">启用搭子模式</div>';
+  html+='<label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="brainToggle" '+(enabled?'checked':'')+' onchange="toggleBrain(this.checked)">开启</label></div>';
+  html+='<div style="font-size:13px;color:var(--muted);margin:8px 0 6px;">我的身份 / 关注领域</div><div class="chips" id="brainChips">';
+  options.forEach(function(o){
+    var sel=o.key===identity;
+    html+='<span class="chip'+(sel?' selected':'')+'" onclick="pickIdentity(\''+o.key+'\')">'+escHtml(o.emoji||'')+' '+escHtml(o.label||o.key)+'</span>';
+  });
+  html+='</div>';
+  html+='<button class="btn btn-primary" style="margin-top:14px;" onclick="Android.openBrainCaptureAuth()">授权屏幕识别</button>';
+  html+='<button class="btn btn-ghost" style="margin-top:10px;" onclick="Android.openBrainDemo()">配置兴趣 / VLM 测试</button>';
+  if(snap.recognitionCount!=null){
+    html+='<div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.7;">今日识别 '+snap.recognitionCount+' 次 · 提醒 '+snap.reminderCount+' 次 · 低质/高价值 '+snap.lowValueCount+'/'+snap.highValueCount+'</div>';
+  }
+  document.getElementById('brainBody').innerHTML=html;
+}
+function toggleBrain(on){ if(window.Android&&Android.setBrainEnabled) Android.setBrainEnabled(!!on); renderBrain(); }
+function pickIdentity(key){ if(window.Android&&Android.setBrainIdentity) Android.setBrainIdentity(key); renderBrain(); }
 
 /* ---------- report ---------- */
 function showReport(){reportDate=todayStr();stack.push('report');renderReport();showScreen('report','每日刷机报告','',true);}
@@ -507,7 +537,7 @@ window.__handleBack=function(){
 
 /* ---------- boot ---------- */
 renderHome();
-showScreen('home','Monkey Face','今天，你还好吗？',false);
+showScreen('home','MONKEYBUDDY','Face + Brain · 今天，你还好吗？',false);
 </script>
 </body>
 </html>

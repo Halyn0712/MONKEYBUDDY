@@ -125,6 +125,7 @@ public class AppWatchService extends AccessibilityService {
         session.startTime = System.currentTimeMillis();
         scrollCount = 0;
         scheduleAlarm(session.plannedMs);
+        BrainSessionCoordinator.onSessionStarted(this, pkg);
     }
 
     private void scheduleAlarm(long delayMs) {
@@ -209,6 +210,7 @@ public class AppWatchService extends AccessibilityService {
         long now = System.currentTimeMillis();
         long actualSec = Math.max(0, (now - session.startTime) / 1000);
         writeBrowse(this, session, now, actualSec);
+        BrainSessionCoordinator.onSessionEnded(this);
         session = null;
     }
 

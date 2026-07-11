@@ -1,0 +1,19 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.monkeybody.brain'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 29
+    }
+
+    androidResources { noCompress += ['gguf'] }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}

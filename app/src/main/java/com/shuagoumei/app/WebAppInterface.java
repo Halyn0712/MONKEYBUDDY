@@ -130,19 +130,43 @@ public class WebAppInterface {
          Prefs.setBrainEnabled(activity, enabled);
      }
  
-     @JavascriptInterface
-     public String getIdentityOptions() {
-         JSONArray arr = new JSONArray();
-         for (ContentJudge.Identity id : ContentJudge.IDENTITIES) {
-             try {
-                 JSONObject o = new JSONObject();
-                 o.put("key", id.key);
-                 o.put("label", id.label);
-                 o.put("emoji", id.emoji);
-                 arr.put(o);
-             } catch (Exception ignored) {}
-         }
-         return arr.toString();
-     }
- 
+    @JavascriptInterface
+    public String getIdentityOptions() {
+        JSONArray arr = new JSONArray();
+        for (ContentJudge.Identity id : ContentJudge.IDENTITIES) {
+            try {
+                JSONObject o = new JSONObject();
+                o.put("key", id.key);
+                o.put("label", id.label);
+                o.put("emoji", id.emoji);
+                arr.put(o);
+            } catch (Exception ignored) {}
+        }
+        return arr.toString();
+    }
+
+    @JavascriptInterface
+    public String getBrainSnapshot() {
+        return Prefs.getBrainSnapshotJson(activity);
+    }
+
+    @JavascriptInterface
+    public void openBrainDemo() {
+        activity.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                activity.startActivity(new Intent(activity,
+                        com.monkeybody.brain.vlm.VlmDemoActivity.class));
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void openBrainCaptureAuth() {
+        activity.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                activity.startActivity(new Intent(activity, BrainCaptureAuthActivity.class));
+            }
+        });
+    }
+
 }

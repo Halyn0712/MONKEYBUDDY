@@ -39,6 +39,8 @@ class OverlayManager {
     private final Handler ui = new Handler(Looper.getMainLooper());
     private View interveneView;
     private View alarmView;
+    private View roastView;
+    private Runnable roastDismiss;
     private Runnable interveneTimeout;
     private Runnable alarmTimeout;
 
@@ -323,5 +325,51 @@ class OverlayManager {
     void removeAll() {
         removeIntervention();
         removeAlarm();
+        removeRoastToast();
+    }
+
+    /** Lightweight roast bubble for keyword-based Brain fallback (does not replace the hanging monkey). */
+    void showRoastToast(final String message) {
+        if (message == null || message.trim().isEmpty()) return;
+        removeRoastToast();
+        final TextView tv = new TextView(ctx);
+        tv.setText(message);
+        tv.setTextColor(0xFF3A2A1E);
+        tv.setTextSize(15f);
+        tv.setPadding(dp(18), dp(14), dp(18), dp(14));
+        tv.setBackgroundResource(R.drawable.bg_sheet);
+        int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                : WindowManager.LayoutParams.TYPE_PHONE;
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                type,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                PixelFormat.TRANSLUCENT);
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.CENTER_HORIZONTAL;
+        lp.y = dp(72);
+        roastView = tv;
+        wm.addView(tv, lp);
+        roastDismiss = new Runnable() {
+            @Override public void run() { removeRoastToast(); }
+        };
+        ui.postDelayed(roastDismiss, 3200L);
+    }
+
+    void removeRoastToast() {
+        if (roastDismiss != null) {
+            ui.removeCallbacks(roastDismiss);
+            roastDismiss = null;
+        }
+        if (roastView != null) {
+            try { wm.removeView(roastView); } catch (Exception ignored) {}
+            roastView = null;
+        }
+    }
+
+    private int dp(int value) {
+        return Math.round(value * ctx.getResources().getDisplayMetrics().density);
     }
 }
