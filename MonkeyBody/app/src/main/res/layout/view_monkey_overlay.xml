@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayContainer" android:layout_width="wrap_content" android:layout_height="132dp"
+    android:orientation="horizontal" android:gravity="center_vertical" android:elevation="8dp">
+    <ImageView android:id="@+id/monkeyIcon" android:layout_width="92dp" android:layout_height="128dp" android:src="@drawable/monkey_hanging" android:scaleType="fitCenter" android:contentDescription="@string/app_name" />
+    <View android:id="@+id/captureStatus" android:layout_width="11dp" android:layout_height="11dp" android:layout_marginStart="-22dp" android:layout_marginEnd="11dp" />
+    <TextView android:id="@+id/messageText" android:layout_width="220dp" android:layout_height="wrap_content" android:text="@string/overlay_message" android:textColor="#2F221F" android:textSize="14sp" android:maxLines="2" android:background="@drawable/bg_overlay" android:paddingStart="14dp" android:paddingTop="10dp" android:paddingEnd="16dp" android:paddingBottom="10dp" android:visibility="gone" />
+</LinearLayout>

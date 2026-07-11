@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Monkey Body</string>
+    <string name="permission_title">Monkey 小红书搭子</string>
+    <string name="permission_description">进入小红书单条图文或视频详情后，每 2.5 秒分析一次新内容。低质量内容会出现锐评和猴叫，高质量内容保持安静。</string>
+    <string name="enable_overlay">启动小红书搭子模式</string>
+    <string name="stop_overlay">停止搭子模式</string>
+    <string name="permission_hint">部分手机会跳转到应用列表，请找到 Monkey Body 并允许“悬浮窗/显示在其他应用上层”。</string>
+    <string name="overlay_message">先停一下，想想你为何打开它 🧠</string>
+    <string name="channel_name">悬浮猴子运行状态</string>
+    <string name="notification_text">悬浮猴子正在陪你保持专注</string>
+    <string name="capture_channel_name">屏幕内容本地分析</string>
+    <string name="capture_notification_text">小红书前台时每 2.5 秒分析一次；低质锐评，高价值猴叫</string>
+    <string name="usage_permission_hint">请允许 Monkey Body 使用“使用情况访问权限”，用于判断目标社媒是否在前台。</string>
+    <string name="projection_permission_denied">未获得屏幕采集授权</string>
+    <string name="vlm_demo">兴趣与云端模型设置</string>
+    <string name="diagnostics">检查权限与运行状态</string>
+    <string name="how_it_works">使用方法</string>
+    <string name="how_it_works_detail">① 配置兴趣和云端 API Key\n② 点击启动并依次完成系统授权\n③ 打开小红书单条内容详情页\n④ 低质量：锐评＋猴叫；高质量：保持安静</string>
+    <string name="privacy_summary">截图仅在内存中短暂处理；云端模式会按你的授权上传压缩截图。猴子默认隐藏，只有低质量内容出现。</string>
+</resources>
