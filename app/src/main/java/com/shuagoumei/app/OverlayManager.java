@@ -3,9 +3,13 @@ package com.shuagoumei.app;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -18,6 +22,8 @@ class OverlayManager {
     interface InterventionCallback {
         void onStart(int minutes, String reason);
         void onResist(String reason);
+        /** No decision was made (back key / safety timeout): just leave, record nothing. */
+        void onCancel();
     }
 
     interface AlarmCallback {
@@ -25,10 +31,16 @@ class OverlayManager {
         void onSnooze(String reason);
     }
 
+    /** If a sheet is left untouched this long, auto-dismiss it so the screen can never lock up. */
+    private static final long SAFETY_MS = 5 * 60 * 1000L;
+
     private final Context ctx;
     private final WindowManager wm;
+    private final Handler ui = new Handler(Looper.getMainLooper());
     private View interveneView;
     private View alarmView;
+    private Runnable interveneTimeout;
+    private Runnable alarmTimeout;
 
     OverlayManager(Context ctx) {
         this.ctx = ctx;
@@ -69,6 +81,7 @@ class OverlayManager {
             @Override public void run() {
                 boolean ok = selected[0] > 0 && reason.getText().toString().trim().length() > 0;
                 go.setAlpha(ok ? 1f : 0.45f);
+                armIntervene();
             }
         };
 
@@ -141,8 +154,61 @@ class OverlayManager {
             }
         });
 
+        interveneTimeout = new Runnable() {
+            @Override public void run() {
+                removeIntervention();
+                cb.onCancel();
+            }
+        };
+        attachEscape(v, new Runnable() {
+            @Override public void run() {
+                removeIntervention();
+                cb.onCancel();
+            }
+        }, new Runnable() {
+            @Override public void run() { armIntervene(); }
+        });
+
         interveneView = v;
         wm.addView(v, params());
+        armIntervene();
+    }
+
+    private void armIntervene() {
+        if (interveneTimeout == null) return;
+        ui.removeCallbacks(interveneTimeout);
+        ui.postDelayed(interveneTimeout, SAFETY_MS);
+    }
+
+    private void armAlarm() {
+        if (alarmTimeout == null) return;
+        ui.removeCallbacks(alarmTimeout);
+        ui.postDelayed(alarmTimeout, SAFETY_MS);
+    }
+
+    /**
+     * Makes a full-screen overlay impossible to get stuck behind: the back key
+     * dismisses it, and any touch keeps the safety timeout from firing while the
+     * user is actually interacting.
+     */
+    private void attachEscape(View v, final Runnable onBack, final Runnable onTouch) {
+        v.setFocusableInTouchMode(true);
+        v.requestFocus();
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override public boolean onKey(View view, int keyCode, KeyEvent e) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && e.getAction() == KeyEvent.ACTION_UP) {
+                    onBack.run();
+                    return true;
+                }
+                return false;
+            }
+        });
+        v.setOnTouchListener(new View.OnTouchListener() {
+            @Override public boolean onTouch(View view, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) onTouch.run();
+                return false;
+            }
+        });
     }
 
     void showAlarm(String appLabel, int plannedMin, final AlarmCallback cb) {
@@ -158,6 +224,7 @@ class OverlayManager {
             @Override public void run() {
                 boolean ok = reason.getText().toString().trim().length() > 0;
                 snooze.setAlpha(ok ? 1f : 0.45f);
+                armAlarm();
             }
         };
 
@@ -211,11 +278,31 @@ class OverlayManager {
             }
         });
 
+        alarmTimeout = new Runnable() {
+            @Override public void run() {
+                removeAlarm();
+                cb.onDone();
+            }
+        };
+        attachEscape(v, new Runnable() {
+            @Override public void run() {
+                removeAlarm();
+                cb.onDone();
+            }
+        }, new Runnable() {
+            @Override public void run() { armAlarm(); }
+        });
+
         alarmView = v;
         wm.addView(v, params());
+        armAlarm();
     }
 
     void removeIntervention() {
+        if (interveneTimeout != null) {
+            ui.removeCallbacks(interveneTimeout);
+            interveneTimeout = null;
+        }
         if (interveneView != null) {
             try { wm.removeView(interveneView); } catch (Exception ignored) {}
             interveneView = null;
@@ -223,6 +310,10 @@ class OverlayManager {
     }
 
     void removeAlarm() {
+        if (alarmTimeout != null) {
+            ui.removeCallbacks(alarmTimeout);
+            alarmTimeout = null;
+        }
         if (alarmView != null) {
             try { wm.removeView(alarmView); } catch (Exception ignored) {}
             alarmView = null;

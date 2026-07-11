@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import org.json.JSONObject;
 
@@ -16,22 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Watches which app is in the foreground. When the user opens an app on the
- * monitored whitelist it shows a "make a deal with yourself" sheet, times the
- * session, and pops an alarm when the agreed time is up. It never force-closes
- * anything — at most it sends the user back to the home screen.
- *
- * The end-of-session alarm is scheduled through AlarmManager (not an in-process
- * Handler) so it still fires when aggressive ROMs freeze or kill our background
- * process while another app is in the foreground.
- */
 public class AppWatchService extends AccessibilityService {
 
     static final int ALARM_REQUEST = 1001;
     private static final long SNOOZE_MS = 5 * 60 * 1000L;
 
-    /** Live instance so AlarmReceiver can reach the running service. */
     static volatile AppWatchService INSTANCE;
 
     private OverlayManager overlay;
@@ -39,6 +29,10 @@ public class AppWatchService extends AccessibilityService {
     private String prevPkg;
     private boolean interventionShowing;
     private Session session;
+
+    // Monkey Brain content monitoring
+    private int scrollCount;
+    private long lastRoastTime;
 
     private static class Session {
         String pkg;
@@ -54,11 +48,22 @@ public class AppWatchService extends AccessibilityService {
         super.onServiceConnected();
         overlay = new OverlayManager(this);
         INSTANCE = this;
+        GuardService.start(this);
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event == null || event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            if (event != null
+                    && event.getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED
+                    && session != null
+                    && !interventionShowing
+                    && !overlay.isShowing()) {
+                scrollCount++;
+                if (scrollCount >= 8) {
+                    checkContent();
+                }
+            }
             return;
         }
         CharSequence pc = event.getPackageName();
@@ -70,16 +75,14 @@ public class AppWatchService extends AccessibilityService {
         if (isIgnored(p) || p.equals(prevPkg)) return;
         prevPkg = p;
 
-        // Left the app we were timing -> finish and record it.
         if (session != null && !p.equals(session.pkg)) {
             endAndRecord();
+            scrollCount = 0;
         }
-        // Left an app whose intervention sheet was still open, without deciding.
         if (interventionShowing) {
             overlay.removeIntervention();
             interventionShowing = false;
         }
-        // Entered a monitored app while idle -> intervene.
         if (session == null && !interventionShowing && Prefs.isWhitelisted(this, p)) {
             showIntervention(p);
         }
@@ -105,6 +108,10 @@ public class AppWatchService extends AccessibilityService {
                 recordResist(label, reason);
                 goHome();
             }
+            @Override public void onCancel() {
+                interventionShowing = false;
+                goHome();
+            }
         });
     }
 
@@ -116,6 +123,7 @@ public class AppWatchService extends AccessibilityService {
         session.plannedMs = minutes * 60 * 1000L;
         session.reason = reason;
         session.startTime = System.currentTimeMillis();
+        scrollCount = 0;
         scheduleAlarm(session.plannedMs);
     }
 
@@ -158,10 +166,8 @@ public class AppWatchService extends AccessibilityService {
         return PendingIntent.getBroadcast(ctx, ALARM_REQUEST, i, flags);
     }
 
-    /** Called by AlarmReceiver when the agreed time is up and the service is alive. */
     void onAlarmFired(String pkg, String label, int plannedMin, String reason, long startTime) {
         if (session == null) {
-            // Process may have been rebuilt; reconstruct enough to record correctly.
             session = new Session();
             session.pkg = pkg;
             session.label = label;
@@ -186,14 +192,13 @@ public class AppWatchService extends AccessibilityService {
         });
     }
 
-    /** Merge a "keep scrolling" reason into the running session so it gets recorded. */
     private void appendReason(String extra) {
         if (session == null || extra == null || extra.trim().isEmpty()) return;
         String e = extra.trim();
         if (session.reason == null || session.reason.isEmpty()) {
             session.reason = e;
         } else if (!session.reason.contains(e)) {
-            session.reason = session.reason + " · 续:" + e;
+            session.reason = session.reason + " / " + e;
         }
     }
 
@@ -234,9 +239,9 @@ public class AppWatchService extends AccessibilityService {
             o.put("type", "resist");
             o.put("platform", label);
             o.put("plannedMin", 0);
-            o.put("reason", reason == null || reason.isEmpty() ? "临时点开" : reason);
+            o.put("reason", reason == null || reason.isEmpty() ? "" : reason);
             o.put("actualSec", 0);
-            o.put("mood", "💪 忍住了");
+            o.put("mood", "");
             o.put("startTime", now);
             o.put("endTime", now);
             o.put("source", "auto");
@@ -262,11 +267,6 @@ public class AppWatchService extends AccessibilityService {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date(ms));
     }
 
-    /**
-     * Best-effort path for when the alarm fires but the service was killed (not
-     * just frozen). Shows the reminder from a fresh context and records the
-     * session; going Home isn't possible without the accessibility connection.
-     */
     static void showAlarmFallback(final Context ctx, final String pkg, final String label,
                                   final int plannedMin, final String reason, final long startTime) {
         final OverlayManager om = new OverlayManager(ctx);
@@ -291,7 +291,7 @@ public class AppWatchService extends AccessibilityService {
                             String e = reasonMore.trim();
                             combined = (reason == null || reason.isEmpty())
                                     ? e
-                                    : (reason.contains(e) ? reason : reason + " · 续:" + e);
+                                    : (reason.contains(e) ? reason : reason + " / " + e);
                         }
                         long triggerAt = System.currentTimeMillis() + SNOOZE_MS;
                         PendingIntent pi = buildAlarmIntent(ctx, pkg, label, plannedMin + 5, combined, startTime);
@@ -326,5 +326,63 @@ public class AppWatchService extends AccessibilityService {
         interventionShowing = false;
         session = null;
         if (INSTANCE == this) INSTANCE = null;
+    }
+
+    // Monkey Brain: content scanning and judgment
+
+    private static final int SCROLL_THRESHOLD = 8;
+
+    private void checkContent() {
+        scrollCount = 0;
+
+        long now = System.currentTimeMillis();
+        if (now - lastRoastTime < ContentJudge.ROAST_COOLDOWN_MS) return;
+
+        if (!Prefs.isBrainEnabled(this)) return;
+        String identity = Prefs.getIdentity(this);
+        if (identity.isEmpty()) return;
+
+        AccessibilityNodeInfo root = getRootInActiveWindow();
+        if (root == null) return;
+
+        StringBuilder sb = new StringBuilder();
+        collectVisibleText(root, sb);
+        root.recycle();
+
+        String text = sb.toString().trim();
+        if (text.length() < 30) return;
+
+        ContentJudge.Judgment j = ContentJudge.judge(text, identity);
+        if (j.shouldRoast) {
+            lastRoastTime = now;
+            if (overlay == null) overlay = new OverlayManager(this);
+            overlay.showRoastToast(j.roast);
+        }
+    }
+
+    private void collectVisibleText(AccessibilityNodeInfo node, StringBuilder sb) {
+        if (node == null) return;
+        try {
+            if (node.isVisibleToUser()) {
+                CharSequence text = node.getText();
+                if (text != null && text.length() > 0) {
+                    if (sb.length() > 0) sb.append(' ');
+                    sb.append(text);
+                }
+                CharSequence desc = node.getContentDescription();
+                if (desc != null && desc.length() > 0) {
+                    if (sb.length() > 0) sb.append(' ');
+                    sb.append(desc);
+                }
+            }
+        } catch (Exception ignored) {}
+        int childCount = node.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            AccessibilityNodeInfo child = node.getChild(i);
+            if (child != null) {
+                collectVisibleText(child, sb);
+                try { child.recycle(); } catch (Exception ignored) {}
+            }
+        }
     }
 }

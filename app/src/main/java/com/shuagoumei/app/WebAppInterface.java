@@ -108,4 +108,41 @@ public class WebAppInterface {
             }
         });
     }
+     // 鈹€鈹€ Monkey Brain settings 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+ 
+     @JavascriptInterface
+     public String getBrainIdentity() {
+         return Prefs.getIdentity(activity);
+     }
+ 
+     @JavascriptInterface
+     public void setBrainIdentity(String key) {
+         Prefs.setIdentity(activity, key);
+     }
+ 
+     @JavascriptInterface
+     public boolean getBrainEnabled() {
+         return Prefs.isBrainEnabled(activity);
+     }
+ 
+     @JavascriptInterface
+     public void setBrainEnabled(boolean enabled) {
+         Prefs.setBrainEnabled(activity, enabled);
+     }
+ 
+     @JavascriptInterface
+     public String getIdentityOptions() {
+         JSONArray arr = new JSONArray();
+         for (ContentJudge.Identity id : ContentJudge.IDENTITIES) {
+             try {
+                 JSONObject o = new JSONObject();
+                 o.put("key", id.key);
+                 o.put("label", id.label);
+                 o.put("emoji", id.emoji);
+                 arr.put(o);
+             } catch (Exception ignored) {}
+         }
+         return arr.toString();
+     }
+ 
 }

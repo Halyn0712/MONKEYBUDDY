@@ -1,6 +1,9 @@
 package com.shuagoumei.app;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
@@ -41,6 +44,15 @@ public class MainActivity extends Activity {
         } else {
             webView.loadUrl("file:///android_asset/www/index.html");
         }
+
+        // Ask for notification permission so the guard/offline alerts are visible,
+        // then keep the process alive with a foreground guard service.
+        if (Build.VERSION.SDK_INT >= 33
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
+        }
+        GuardService.start(this);
     }
 
     @Override
