@@ -77,11 +77,11 @@ public class AppPickerActivity extends Activity {
     private View buildUi() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(0xFFF0F2FF);
+        root.setBackgroundColor(0xFFFDF6EC);
 
         TextView hint = new TextView(this);
         hint.setText("勾选你想管住的应用。打开它们时，Monkey Face 会先提醒你约定时长。");
-        hint.setTextColor(0xFF7A7A9E);
+        hint.setTextColor(0xFFA08A76);
         hint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         int pad = dp(16);
         hint.setPadding(pad, pad, pad, dp(8));
@@ -145,7 +145,7 @@ public class AppPickerActivity extends Activity {
                 row.addView(icon);
 
                 TextView label = new TextView(AppPickerActivity.this);
-                label.setTextColor(0xFF1A1A2E);
+                label.setTextColor(0xFF3A2A1E);
                 label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
                         0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);

@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
-        webView.setBackgroundColor(0xFFF0F2FF);
+        webView.setBackgroundColor(0xFFFDF6EC);
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         if (savedInstanceState != null) {

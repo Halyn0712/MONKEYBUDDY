@@ -6,10 +6,10 @@
 <title>Monkey Face</title>
 <style>
 :root{
-  --bg:#f0f2ff; --surface:#ffffff; --surface2:#f5f7ff; --surface3:#ebefff;
-  --ink:#1a1a2e; --muted:#7a7a9e; --line:#e6e9f7;
-  --accent:#5b6ef7; --accent2:#8b5cf6;
-  --success:#22c55e; --warning:#f59e0b; --danger:#ef4444;
+  --bg:#fdf6ec; --surface:#ffffff; --surface2:#fbf3e4; --surface3:#f4e7d2;
+  --ink:#3a2a1e; --muted:#a08a76; --line:#efe3d2;
+  --accent:#a6642b; --accent2:#e8a13a;
+  --success:#3fae5a; --warning:#f5a623; --danger:#e2604a;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
@@ -22,16 +22,22 @@ body{
 
 /* top bar */
 .topbar{
-  padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 14px;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 16px;
   display:flex;align-items:center;gap:12px;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;flex-shrink:0;
+  color:#fff;flex-shrink:0;border-radius:0 0 22px 22px;
 }
 .topbar .back{
-  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);
+  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.22);
   display:none;align-items:center;justify-content:center;font-size:20px;cursor:pointer;
 }
 .topbar.has-back .back{display:flex;}
+.topbar .brand{
+  width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);
+  display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(58,42,30,.2);
+}
+.topbar.has-back .brand{display:none;}
 .topbar .title{font-size:19px;font-weight:700;flex:1;}
 .topbar .sub{font-size:12px;opacity:.85;font-weight:400;margin-top:2px;}
 
@@ -42,9 +48,9 @@ body{
 @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 
 /* cards */
-.card{background:var(--surface);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(91,110,247,.06);}
+.card{background:var(--surface);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(166,100,43,.08);}
 .card h3{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
-.hero{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 10px 30px rgba(91,110,247,.28);}
+.hero{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 10px 30px rgba(166,100,43,.28);}
 .hero .big{font-size:40px;font-weight:800;line-height:1.1;}
 .hero .unit{font-size:16px;font-weight:600;opacity:.9;margin-left:4px;}
 .hero .rowstat{display:flex;gap:10px;margin-top:16px;}
@@ -53,28 +59,19 @@ body{
 .hero .rowstat .st span{font-size:11px;opacity:.85;}
 
 /* buttons */
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .12s,opacity .2s;}
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .12s,opacity .2s;}
 .btn:active{transform:scale(.97);}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 22px rgba(91,110,247,.3);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 22px rgba(166,100,43,.3);}
 .btn-ghost{background:var(--surface3);color:var(--ink);}
-.btn-danger{background:var(--danger);color:#fff;}
-.btn-success{background:var(--success);color:#fff;}
 .btn:disabled{opacity:.45;cursor:not-allowed;}
-.btn-row{display:flex;gap:10px;}
-.btn-row .btn{margin:0;}
 
 .navgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px;}
-.navtile{background:var(--surface);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 14px rgba(91,110,247,.05);transition:transform .12s;}
+.navtile{background:var(--surface);border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 14px rgba(166,100,43,.06);transition:transform .12s;}
 .navtile:active{transform:scale(.95);}
 .navtile .ico{font-size:24px;}
 .navtile .lb{font-size:12px;margin-top:6px;color:var(--muted);}
 
-/* platform pick */
-.plat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.plat{background:var(--surface2);border:2px solid transparent;border-radius:16px;padding:16px 6px;text-align:center;cursor:pointer;transition:all .15s;}
-.plat:active{transform:scale(.94);}
-.plat .emoji{width:48px;height:48px;margin:0 auto;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:800;}
-.plat .nm{font-size:12px;margin-top:8px;}
+/* platform colors (history icons) */
 .p-douyin{background:linear-gradient(135deg,#25f4ee,#fe2c55);}
 .p-xhs{background:#ff2442;}
 .p-weibo{background:#e6162d;}
@@ -85,45 +82,13 @@ body{
 /* chips */
 .chips{display:flex;flex-wrap:wrap;gap:8px;}
 .chip{padding:9px 16px;background:var(--surface3);border:1.5px solid transparent;border-radius:20px;font-size:14px;cursor:pointer;transition:all .15s;}
-.chip.selected{border-color:var(--accent);background:rgba(91,110,247,.14);color:var(--accent);font-weight:600;}
-.input{width:100%;padding:13px 15px;background:var(--surface3);border:1.5px solid transparent;border-radius:12px;font-size:14px;outline:none;transition:border-color .2s;}
-.input:focus{border-color:var(--accent);}
-.label{font-size:13px;color:var(--muted);margin:14px 0 8px;display:block;}
-
-/* timer */
-.timer-wrap{text-align:center;padding-top:20px;}
-.timer-plat{font-size:15px;color:var(--muted);margin-bottom:6px;}
-.timer-ring{position:relative;width:230px;height:230px;margin:14px auto;}
-.timer-ring svg{transform:rotate(-90deg);}
-.timer-ring .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.timer-ring .val .t{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums;}
-.timer-ring .val .p{font-size:13px;color:var(--muted);margin-top:4px;}
-.timer-reason{background:var(--surface2);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--muted);margin:16px 0;}
-.timer-reason b{color:var(--ink);}
-
-/* overlay modal */
-.overlay{position:fixed;inset:0;background:rgba(20,20,40,.42);display:none;align-items:flex-end;justify-content:center;z-index:100;}
-.overlay.show{display:flex;animation:fade .25s;}
-.sheet{background:#fff;width:100%;max-width:520px;border-radius:26px 26px 0 0;padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 26px);transform:translateY(100%);animation:slideup .32s cubic-bezier(.32,.72,0,1) forwards;}
-@keyframes slideup{to{transform:translateY(0);}}
-.sheet .mh{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
-.sheet .mh .mi{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.sheet .mh .mt{font-size:18px;font-weight:700;}
-.sheet .mh .ms{font-size:12px;color:var(--muted);margin-top:2px;}
-
-/* mood */
-.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
-.mood{background:var(--surface2);border:2px solid transparent;border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .15s;}
-.mood.selected{border-color:var(--accent);background:rgba(91,110,247,.1);}
-.mood .e{font-size:28px;}
-.mood .l{font-size:12px;margin-top:6px;}
+.chip.selected{border-color:var(--accent);background:rgba(166,100,43,.14);color:var(--accent);font-weight:600;}
 
 /* bars */
 .barrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;}
 .barrow .nm{width:60px;flex-shrink:0;color:var(--muted);}
 .barrow .track{flex:1;height:22px;background:var(--surface3);border-radius:8px;overflow:hidden;}
 .barrow .fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:11px;font-weight:600;min-width:24px;transition:width .5s;}
-.f-plan{background:linear-gradient(90deg,#a5b4fc,#818cf8);}
 .f-actual{background:linear-gradient(90deg,var(--accent),var(--accent2));}
 
 /* trend */
@@ -150,7 +115,7 @@ body{
 .empty .e{font-size:44px;margin-bottom:10px;}
 .empty .t{font-size:14px;}
 
-.report-verdict{background:linear-gradient(135deg,rgba(91,110,247,.1),rgba(139,92,246,.1));border-radius:14px;padding:16px;font-size:14px;line-height:1.6;color:var(--ink);}
+.report-verdict{background:linear-gradient(135deg,rgba(166,100,43,.1),rgba(232,161,58,.1));border-radius:14px;padding:16px;font-size:14px;line-height:1.6;color:var(--ink);}
 .report-verdict b{color:var(--accent);}
 .mini-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .mini-stats .ms{background:var(--surface2);border-radius:12px;padding:14px;text-align:center;}
@@ -159,17 +124,16 @@ body{
 .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;background:var(--surface3);color:var(--muted);margin:3px 4px 0 0;}
 .overtime-badge{color:var(--danger);font-weight:700;}
 .datepick{display:flex;gap:8px;align-items:center;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;}
-.datepick .d{flex-shrink:0;padding:8px 12px;border-radius:12px;background:var(--surface);font-size:12px;text-align:center;cursor:pointer;box-shadow:0 3px 10px rgba(91,110,247,.05);}
+.datepick .d{flex-shrink:0;padding:8px 12px;border-radius:12px;background:var(--surface);font-size:12px;text-align:center;cursor:pointer;box-shadow:0 3px 10px rgba(166,100,43,.05);}
 .datepick .d.sel{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
 .datepick .d .dd{font-size:15px;font-weight:700;}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 40px);transform:translate(-50%,20px);background:rgba(26,26,46,.94);color:#fff;padding:13px 22px;border-radius:26px;font-size:14px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;max-width:80%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);}
-.toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="topbar" id="topbar">
     <div class="back" onclick="goHome()">‹</div>
+    <div class="brand">🐵</div>
     <div style="flex:1">
       <div class="title" id="tbTitle">Monkey Face</div>
       <div class="sub" id="tbSub"></div>
@@ -192,7 +156,6 @@ body{
         <h3>🛡️ 自动监控</h3>
         <div id="monitorBody"></div>
       </div>
-      <button class="btn btn-primary" onclick="openPlatform()">📱 手动记一笔 · 我要刷一会儿</button>
       <div class="navgrid">
         <div class="navtile" onclick="showReport()"><div class="ico">📊</div><div class="lb">今日报告</div></div>
         <div class="navtile" onclick="showTrend()"><div class="ico">📈</div><div class="lb">本周趋势</div></div>
@@ -202,25 +165,6 @@ body{
       <div class="card" style="margin-top:14px;">
         <h3>💡 Monkey Face 的小提醒</h3>
         <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="homeTip"></div>
-      </div>
-    </div>
-
-    <!-- TIMER -->
-    <div class="screen" id="s-timer">
-      <div class="timer-wrap">
-        <div class="timer-plat" id="tmPlat">抖音</div>
-        <div class="timer-ring">
-          <svg width="230" height="230" viewBox="0 0 230 230">
-            <circle cx="115" cy="115" r="104" fill="none" stroke="#e6e9f7" stroke-width="14"/>
-            <circle id="tmArc" cx="115" cy="115" r="104" fill="none" stroke="#5b6ef7" stroke-width="14" stroke-linecap="round" stroke-dasharray="653.45" stroke-dashoffset="653.45"/>
-          </svg>
-          <div class="val">
-            <div class="t" id="tmTime">00:00</div>
-            <div class="p" id="tmPlan">计划 15 分钟</div>
-          </div>
-        </div>
-        <div class="timer-reason">这次是为了：<b id="tmReason">-</b></div>
-        <button class="btn btn-danger" onclick="endSession()">我刷完了 · 结束记录</button>
       </div>
     </div>
 
@@ -258,103 +202,7 @@ body{
   </div>
 </div>
 
-<!-- OVERLAY: platform -->
-<div class="overlay" id="ov-platform">
-  <div class="sheet">
-    <div class="mh"><div class="mi">📱</div><div><div class="mt">你想刷哪个？</div><div class="ms">选一个平台，开始前先想一想</div></div></div>
-    <div class="plat-grid" style="margin-top:16px;">
-      <div class="plat" onclick="pickPlatform('抖音','p-douyin','抖')"><div class="emoji p-douyin">抖</div><div class="nm">抖音</div></div>
-      <div class="plat" onclick="pickPlatform('小红书','p-xhs','书')"><div class="emoji p-xhs">书</div><div class="nm">小红书</div></div>
-      <div class="plat" onclick="pickPlatform('微博','p-weibo','博')"><div class="emoji p-weibo">博</div><div class="nm">微博</div></div>
-      <div class="plat" onclick="pickPlatform('B站','p-bili','B')"><div class="emoji p-bili">B</div><div class="nm">B站</div></div>
-      <div class="plat" onclick="pickPlatform('微信','p-wechat','信')"><div class="emoji p-wechat">信</div><div class="nm">微信</div></div>
-      <div class="plat" onclick="pickPlatform('其他','p-other','＋')"><div class="emoji p-other">＋</div><div class="nm">其他</div></div>
-    </div>
-    <button class="btn btn-ghost" style="margin-top:16px;" onclick="closeOverlay('ov-platform')">取消</button>
-  </div>
-</div>
-
-<!-- OVERLAY: intervention -->
-<div class="overlay" id="ov-intervene">
-  <div class="sheet">
-    <div class="mh"><div class="mi">✋</div><div><div class="mt">等一下</div><div class="ms" id="ivSub">打开抖音之前，先跟自己约定一下</div></div></div>
-    <span class="label">这次准备刷多久？</span>
-    <div class="chips" id="ivChips">
-      <div class="chip" data-min="5" onclick="pickMinutes(5,this)">5 分钟</div>
-      <div class="chip" data-min="10" onclick="pickMinutes(10,this)">10 分钟</div>
-      <div class="chip" data-min="15" onclick="pickMinutes(15,this)">15 分钟</div>
-      <div class="chip" data-min="30" onclick="pickMinutes(30,this)">30 分钟</div>
-      <div class="chip" data-min="60" onclick="pickMinutes(60,this)">1 小时</div>
-    </div>
-    <span class="label">为什么现在要刷？（说给自己听）</span>
-    <div class="chips" id="ivReasonChips" style="margin-bottom:10px;">
-      <div class="chip" onclick="pickReason('放松',this)">放松</div>
-      <div class="chip" onclick="pickReason('无聊',this)">无聊</div>
-      <div class="chip" onclick="pickReason('习惯性点开',this)">习惯性点开</div>
-      <div class="chip" onclick="pickReason('查东西',this)">查东西</div>
-    </div>
-    <input class="input" id="ivReason" placeholder="点上面的按钮，或自己写一句…" oninput="onReasonInput()">
-    <div class="btn-row" style="margin-top:22px;">
-      <button class="btn btn-ghost" onclick="resistIt()">算了，忍住</button>
-      <button class="btn btn-primary" id="ivGo" disabled onclick="startTimer()">开始计时</button>
-    </div>
-  </div>
-</div>
-
-<!-- OVERLAY: overtime -->
-<div class="overlay" id="ov-overtime">
-  <div class="sheet">
-    <div class="mh"><div class="mi">⏰</div><div><div class="mt">时间到啦</div><div class="ms">你约定的时间已经用完</div></div></div>
-    <div style="font-size:14px;color:var(--muted);line-height:1.7;margin:14px 0;">
-      你说好刷 <b id="otPlan" style="color:var(--ink)">15</b> 分钟，现在到点了。<br>是刷够了，还是要再看看？
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-success" onclick="endSession()">刷够了，收工</button>
-      <button class="btn btn-ghost" onclick="closeOverlay('ov-overtime')">再刷 5 分钟</button>
-    </div>
-  </div>
-</div>
-
-<!-- OVERLAY: reflection -->
-<div class="overlay" id="ov-reflect">
-  <div class="sheet">
-    <div class="mh"><div class="mi">🪞</div><div><div class="mt">刚才那阵刷，感觉如何？</div><div class="ms">诚实地记录一下当下的感受</div></div></div>
-    <div class="mood-grid" style="margin-top:14px;">
-      <div class="mood" onclick="pickMood('😌 放松',this)"><div class="e">😌</div><div class="l">放松</div></div>
-      <div class="mood" onclick="pickMood('😀 开心',this)"><div class="e">😀</div><div class="l">开心</div></div>
-      <div class="mood" onclick="pickMood('😐 一般',this)"><div class="e">😐</div><div class="l">一般</div></div>
-      <div class="mood" onclick="pickMood('😮‍💨 空虚',this)"><div class="e">😮‍💨</div><div class="l">空虚</div></div>
-      <div class="mood" onclick="pickMood('😩 后悔',this)"><div class="e">😩</div><div class="l">后悔</div></div>
-      <div class="mood" onclick="pickMood('🥱 更累了',this)"><div class="e">🥱</div><div class="l">更累了</div></div>
-    </div>
-    <button class="btn btn-primary" id="rfGo" disabled style="margin-top:20px;" onclick="showSummary()">看看这次总结</button>
-  </div>
-</div>
-
-<!-- OVERLAY: summary -->
-<div class="overlay" id="ov-summary">
-  <div class="sheet">
-    <div class="mh"><div class="mi">✅</div><div><div class="mt">这一次记好了</div><div class="ms" id="smSub"></div></div></div>
-    <div style="margin:16px 0;">
-      <div class="barrow"><div class="nm">计划</div><div class="track"><div class="fill f-plan" id="smPlanBar">0</div></div></div>
-      <div class="barrow"><div class="nm">实际</div><div class="track"><div class="fill f-actual" id="smActualBar">0</div></div></div>
-    </div>
-    <div class="report-verdict" id="smVerdict"></div>
-    <button class="btn btn-primary" style="margin-top:18px;" onclick="finishSession()">完成</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
 <script>
-/* ---------- toast ---------- */
-var toastTimer=null;
-function toast(msg){
-  var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  if(toastTimer)clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){t.classList.remove('show');},2200);
-}
-
 /* ---------- storage ---------- */
 var KEY='shuagoumei_sessions_v1';
 function nativeSessions(){
@@ -369,15 +217,11 @@ function load(){
   local.concat(nativeSessions()).forEach(function(x){if(x&&x.id!=null)map[x.id]=x;});
   return Object.keys(map).map(function(k){return map[k];});
 }
-function save(arr){localStorage.setItem(KEY,JSON.stringify(arr));}
 function todayStr(d){d=d||new Date();var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0'+m:m)+'-'+(day<10?'0'+day:day);}
-function fmtClock(sec){var m=Math.floor(sec/60),s=sec%60;return (m<10?'0'+m:m)+':'+(s<10?'0'+s:s);}
 function platClass(p){return {'抖音':'p-douyin','小红书':'p-xhs','微博':'p-weibo','B站':'p-bili','微信':'p-wechat'}[p]||'p-other';}
 function platGlyph(p){return {'抖音':'抖','小红书':'书','微博':'博','B站':'B','微信':'信'}[p]||'＋';}
 
 /* ---------- state ---------- */
-var cur={};           // current session being recorded
-var timer=null, elapsed=0, overtimeShown=false;
 var stack=['home'];   // screen navigation stack
 var reportDate=todayStr();
 
@@ -391,8 +235,6 @@ function showScreen(id,title,sub,back){
   document.getElementById('body').scrollTop=0;
 }
 function goHome(){
-  if(timer){ if(!confirm('正在计时，确定要离开并放弃这次记录吗？'))return; stopTimer(); }
-  closeAllOverlays();
   stack=['home']; renderHome();
   showScreen('home','Monkey Face','今天，你还好吗？',false);
 }
@@ -458,114 +300,6 @@ function renderMonitor(){
   document.getElementById('monitorBody').innerHTML=html;
 }
 window.__onNativeResume=function(){ try{ renderHome(); }catch(e){} };
-
-/* ---------- platform + intervention ---------- */
-function openPlatform(){openOverlay('ov-platform');}
-function pickPlatform(name){
-  cur={platform:name}; closeOverlay('ov-platform');
-  document.getElementById('ivSub').textContent='打开'+name+'之前，先跟自己约定一下';
-  document.getElementById('ivReason').value='';
-  document.querySelectorAll('#ivChips .chip').forEach(function(c){c.classList.remove('selected');});
-  document.querySelectorAll('#ivReasonChips .chip').forEach(function(c){c.classList.remove('selected');});
-  cur.plannedMin=null; document.getElementById('ivGo').disabled=true;
-  openOverlay('ov-intervene');
-}
-function pickMinutes(m,el){
-  cur.plannedMin=m;
-  document.querySelectorAll('#ivChips .chip').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); checkIntervene();
-}
-function pickReason(text,el){
-  document.getElementById('ivReason').value=text;
-  document.querySelectorAll('#ivReasonChips .chip').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); checkIntervene();
-}
-function onReasonInput(){
-  // typing manually clears the quick-reason highlight
-  document.querySelectorAll('#ivReasonChips .chip').forEach(function(c){c.classList.remove('selected');});
-  checkIntervene();
-}
-function checkIntervene(){
-  var ok=cur.plannedMin && document.getElementById('ivReason').value.trim().length>0;
-  document.getElementById('ivGo').disabled=!ok;
-}
-function resistIt(){
-  var all=load();
-  all.push({id:Date.now(),date:todayStr(),type:'resist',platform:cur.platform,
-    plannedMin:cur.plannedMin||0,reason:document.getElementById('ivReason').value.trim()||'临时点开',
-    actualSec:0,mood:'💪 忍住了',startTime:Date.now(),endTime:Date.now()});
-  save(all); closeOverlay('ov-intervene');
-  renderHome();
-  toast('👍 你刚刚忍住了「'+cur.platform+'」，很棒');
-}
-
-/* ---------- timer ---------- */
-var ARC=653.45;
-function startTimer(){
-  cur.reason=document.getElementById('ivReason').value.trim();
-  cur.id=Date.now(); cur.date=todayStr(); cur.startTime=Date.now(); cur.type='browse';
-  elapsed=0; overtimeShown=false;
-  closeOverlay('ov-intervene');
-  document.getElementById('tmPlat').textContent=cur.platform;
-  document.getElementById('tmReason').textContent=cur.reason;
-  document.getElementById('tmPlan').textContent='计划 '+cur.plannedMin+' 分钟';
-  document.getElementById('tmTime').textContent='00:00';
-  document.getElementById('tmArc').setAttribute('stroke-dashoffset',ARC);
-  document.getElementById('tmArc').setAttribute('stroke','#5b6ef7');
-  stack=['home','timer'];
-  showScreen('timer','刷屏计时中','诚实地看着时间流走',false);
-  timer=setInterval(tick,1000);
-}
-function tick(){
-  elapsed++;
-  document.getElementById('tmTime').textContent=fmtClock(elapsed);
-  var planSec=cur.plannedMin*60;
-  var ratio=Math.min(elapsed/planSec,1);
-  document.getElementById('tmArc').setAttribute('stroke-dashoffset',ARC*(1-ratio));
-  if(elapsed>=planSec){
-    document.getElementById('tmArc').setAttribute('stroke','#ef4444');
-    if(!overtimeShown){overtimeShown=true;document.getElementById('otPlan').textContent=cur.plannedMin;openOverlay('ov-overtime');}
-  }
-}
-function stopTimer(){if(timer){clearInterval(timer);timer=null;}}
-function endSession(){
-  stopTimer(); closeOverlay('ov-overtime');
-  cur.actualSec=elapsed; cur.endTime=Date.now(); cur.mood=null;
-  document.querySelectorAll('#ov-reflect .mood').forEach(function(m){m.classList.remove('selected');});
-  document.getElementById('rfGo').disabled=true;
-  openOverlay('ov-reflect');
-}
-
-/* ---------- reflection + summary ---------- */
-function pickMood(m,el){
-  cur.mood=m;
-  document.querySelectorAll('#ov-reflect .mood').forEach(function(x){x.classList.remove('selected');});
-  el.classList.add('selected'); document.getElementById('rfGo').disabled=false;
-}
-function showSummary(){
-  closeOverlay('ov-reflect');
-  var planSec=cur.plannedMin*60, actSec=cur.actualSec;
-  var maxV=Math.max(planSec,actSec,1);
-  var pm=Math.round(planSec/60), am=Math.round(actSec/60);
-  var pb=document.getElementById('smPlanBar'), ab=document.getElementById('smActualBar');
-  pb.style.width=(planSec/maxV*100)+'%'; pb.textContent=pm+'分';
-  ab.style.width=(actSec/maxV*100)+'%'; ab.textContent=am+'分';
-  document.getElementById('smSub').textContent=cur.platform+' · '+cur.mood;
-  var over=actSec-planSec, v='';
-  if(over<=0){v='👏 你在计划内收了手，实际比计划还少了 <b>'+Math.abs(Math.round(over/60))+' 分钟</b>。这份自控很珍贵。';}
-  else if(over<=180){v='🙂 稍微超了一点点（<b>'+Math.round(over/60)+' 分钟</b>），基本还在掌控中。';}
-  else{v='⏳ 比计划多刷了 <b>'+Math.round(over/60)+' 分钟</b>。下次可以试着在提醒响起时就放下。';}
-  if(cur.mood.indexOf('后悔')>-1||cur.mood.indexOf('空虚')>-1||cur.mood.indexOf('更累')>-1){
-    v+='<br>你标记了「'+cur.mood.replace(/^[^\s]+\s/,'')+'」，记住这个感觉。';
-  }
-  document.getElementById('smVerdict').innerHTML=v;
-  openOverlay('ov-summary');
-}
-function finishSession(){
-  var all=load(); all.push(cur); save(all);
-  closeOverlay('ov-summary'); cur={};
-  goHome();
-}
 
 /* ---------- report ---------- */
 function showReport(){reportDate=todayStr();stack.push('report');renderReport();showScreen('report','每日刷机报告','',true);}
@@ -764,21 +498,9 @@ function renderReasons(){
     '<div class="card"><h3>📝 你写下的原话</h3>'+phraseHtml+'</div>';
 }
 
-function openOverlay(id){var o=document.getElementById(id);o.querySelector('.sheet').style.animation='none';o.offsetHeight;o.querySelector('.sheet').style.animation='';o.classList.add('show');}
-function closeOverlay(id){document.getElementById(id).classList.remove('show');}
-function closeAllOverlays(){document.querySelectorAll('.overlay').forEach(function(o){o.classList.remove('show');});}
-function anyOverlayOpen(){return document.querySelector('.overlay.show');}
-
 /* ---------- android back ---------- */
 window.__handleBack=function(){
-  var ov=anyOverlayOpen();
-  if(ov){
-    // don't allow closing reflection/summary by back (must complete), but allow others
-    if(ov.id==='ov-platform'||ov.id==='ov-intervene'||ov.id==='ov-overtime'){closeOverlay(ov.id);return true;}
-    if(ov.id==='ov-reflect'||ov.id==='ov-summary'){return true;} // swallow, force completion
-  }
   var top=stack[stack.length-1];
-  if(top==='timer'){goHome();return true;}
   if(top==='report'||top==='trend'||top==='history'||top==='reasons'){goHome();return true;}
   return false; // on home -> let android exit
 };
